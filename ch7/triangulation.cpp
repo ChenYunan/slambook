@@ -151,6 +151,7 @@ void pose_estimation_2d2d (
 
     //-- 计算基础矩阵
     Mat fundamental_matrix;
+    
     fundamental_matrix = findFundamentalMat ( points1, points2, CV_FM_8POINT );
     cout<<"fundamental_matrix is "<<endl<< fundamental_matrix<<endl;
 
@@ -223,4 +224,3 @@ Point2f pixel2cam ( const Point2d& p, const Mat& K )
         ( p.y - K.at<double>(1,2) ) / K.at<double>(1,1) 
     );
 }
-

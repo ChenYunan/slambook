@@ -17,13 +17,15 @@ int main( int argc, char** argv )
         cout<<"usage: useLK path_to_dataset"<<endl;
         return 1;
     }
+    //cyn in 2019-01-04
+    //cout << "test:" << argv[0] << endl;
     string path_to_dataset = argv[1];
     string associate_file = path_to_dataset + "/associate.txt";
     
     ifstream fin( associate_file );
     if ( !fin ) 
     {
-        cerr<<"I cann't find associate.txt!"<<endl;
+        cerr<<"I can't find associate.txt!"<<endl;
         return 1;
     }
     
@@ -44,6 +46,7 @@ int main( int argc, char** argv )
             detector->detect( color, kps );
             for ( auto kp:kps )
                 keypoints.push_back( kp.pt );
+            //cout << "test:" << keypoints.front() << "," << keypoints.back() << endl;
             last_color = color;
             continue;
         }

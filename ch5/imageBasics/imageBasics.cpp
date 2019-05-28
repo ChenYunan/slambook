@@ -49,7 +49,7 @@ int main ( int argc, char** argv )
     }
     chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
     chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>( t2-t1 );
-    cout<<"遍历图像用时："<<time_used.count()<<" 秒。"<<endl;
+    cout<<"遍历图像用时："<<time_used.count()<<" 秒."<<endl;
 
     // 关于 cv::Mat 的拷贝
     // 直接赋值并不会拷贝数据

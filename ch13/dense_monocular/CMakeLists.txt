@@ -18,6 +18,6 @@ set( THIRD_PARTY_LIBS
     ${OpenCV_LIBS}
     ${Sophus_LIBRARIES}
 )
-
+set(Sophus_LIBRARIES libSophus.so)
 add_executable( dense_mapping dense_mapping.cpp )
-target_link_libraries( dense_mapping ${THIRD_PARTY_LIBS} )
+target_link_libraries( dense_mapping ${THIRD_PARTY_LIBS} ${Sophus_LIBRARIES} )

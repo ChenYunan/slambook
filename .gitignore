@@ -1,8 +1,15 @@
 *build*
 *.out
 CMakeCache.txt
-CMaeFiles
+CMakeFiles
 cmake_install.cmake
+Makefile
 *.kdev4
 *.DS*
 .idea*
+*/data/*
+*.vscode*
+*.zip
+ch7/tmp/*
+ch13/test_data/*
+3rdparty/DBow3/*

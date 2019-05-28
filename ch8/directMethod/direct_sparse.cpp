@@ -94,7 +94,7 @@ public:
             return;
         }
         VertexSE3Expmap* vtx = static_cast<VertexSE3Expmap*> ( _vertices[0] );
-        Eigen::Vector3d xyz_trans = vtx->estimate().map ( x_world_ );   // q in book
+        Eigen::Vector3d xyz_trans = vtx->estimate().map ( x_world_ );   // q = [X, Y, Z] in book
 
         double x = xyz_trans[0];
         double y = xyz_trans[1];
@@ -104,7 +104,7 @@ public:
         float u = x*fx_*invz + cx_;
         float v = y*fy_*invz + cy_;
 
-        // jacobian from se3 to u,v
+        // jacobian from se3 to u,v; u, v are velocities.
         // NOTE that in g2o the Lie algebra is (\omega, \epsilon), where \omega is so(3) and \epsilon the translation
         Eigen::Matrix<double, 2, 6> jacobian_uv_ksai;
 

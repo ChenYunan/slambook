@@ -193,7 +193,7 @@ bool VisualOdometry::checkEstimatedPose()
         return false;
     }
     // if the motion is too large, it is probably wrong
-    Sophus::Vector6d d = T_c_r_estimated_.log();
+    Sophus::Vector6d d = T_c_r_estimated_.log();//对数映射获得李代数
     if ( d.norm() > 5.0 )
     {
         cout<<"reject because motion is too large: "<<d.norm()<<endl;

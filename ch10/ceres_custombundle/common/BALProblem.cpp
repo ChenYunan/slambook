@@ -168,8 +168,7 @@ void BALProblem::WriteToPLYFile(const std::string& filename)const{
     for(int i = 0; i < num_cameras(); ++i){
       const double* camera = cameras() + camera_block_size() * i;
       CameraToAngelAxisAndCenter(camera, angle_axis, center);
-      of << center[0] << ' ' << center[1] << ' ' << center[2]
-         << "0 255 0" << '\n';
+      of << center[0] << ' ' << center[1] << ' ' << center[2] << ' ' << "0 255 0\n";
     }
 
     // Export the structure (i.e. 3D Points) as white points.
@@ -187,11 +186,11 @@ void BALProblem::WriteToPLYFile(const std::string& filename)const{
 void BALProblem::CameraToAngelAxisAndCenter(const double* camera, 
                                             double* angle_axis,
                                             double* center) const{
-    VectorRef angle_axis_ref(angle_axis,3);
+    VectorRef angle_axis_ref(angle_axis, 3);
     if(use_quaternions_){
       QuaternionToAngleAxis(camera, angle_axis);
     }else{
-      angle_axis_ref = ConstVectorRef(camera,3);
+      angle_axis_ref = ConstVectorRef(camera, 3);
     }
 
     // c = -R't
@@ -199,7 +198,7 @@ void BALProblem::CameraToAngelAxisAndCenter(const double* camera,
     AngleAxisRotatePoint(inverse_rotation.data(),
                          camera + camera_block_size() - 6,
                          center);
-    VectorRef(center,3) *= -1.0;
+    VectorRef(center, 3) *= -1.0;
 }
 
 void BALProblem::AngleAxisAndCenterToCamera(const double* angle_axis,

@@ -45,7 +45,7 @@ BALProblem::BALProblem(const std::string& filename, bool use_quaternions){
     return;
   };
 
-  // This wil die horribly on invalid files. Them's the breaks.
+  // This will die horribly on invalid files. Them's the breaks.
   FscanfOrDie(fptr, "%d", &num_cameras_);
   FscanfOrDie(fptr, "%d", &num_points_);
   FscanfOrDie(fptr, "%d", &num_observations_);
@@ -169,7 +169,7 @@ void BALProblem::WriteToPLYFile(const std::string& filename)const{
       const double* camera = cameras() + camera_block_size() * i;
       CameraToAngelAxisAndCenter(camera, angle_axis, center);
       of << center[0] << ' ' << center[1] << ' ' << center[2]
-         << "0 255 0" << '\n';
+         << ' ' << "0 255 0" << '\n';
     }
 
     // Export the structure (i.e. 3D Points) as white points.
@@ -187,11 +187,11 @@ void BALProblem::WriteToPLYFile(const std::string& filename)const{
 void BALProblem::CameraToAngelAxisAndCenter(const double* camera, 
                                             double* angle_axis,
                                             double* center) const{
-    VectorRef angle_axis_ref(angle_axis,3);
+    VectorRef angle_axis_ref(angle_axis, 3);
     if(use_quaternions_){
       QuaternionToAngleAxis(camera, angle_axis);
     }else{
-      angle_axis_ref = ConstVectorRef(camera,3);
+      angle_axis_ref = ConstVectorRef(camera, 3);
     }
 
     // c = -R't
@@ -199,23 +199,23 @@ void BALProblem::CameraToAngelAxisAndCenter(const double* camera,
     AngleAxisRotatePoint(inverse_rotation.data(),
                          camera + camera_block_size() - 6,
                          center);
-    VectorRef(center,3) *= -1.0;
+    VectorRef(center, 3) *= -1.0;
 }
 
 void BALProblem::AngleAxisAndCenterToCamera(const double* angle_axis,
                                             const double* center,
                                             double* camera) const{
-    ConstVectorRef angle_axis_ref(angle_axis,3);
+    ConstVectorRef angle_axis_ref(angle_axis, 3);
     if(use_quaternions_){
-      AngleAxisToQuaternion(angle_axis,camera);
+      AngleAxisToQuaternion(angle_axis, camera);
     }
     else{
       VectorRef(camera, 3) = angle_axis_ref;
     }
 
     // t = -R * c 
-    AngleAxisRotatePoint(angle_axis,center,camera+camera_block_size() - 6);
-    VectorRef(camera + camera_block_size() - 6,3) *= -1.0;
+    AngleAxisRotatePoint(angle_axis, center, camera + camera_block_size() - 6);
+    VectorRef(camera + camera_block_size() - 6, 3) *= -1.0;
 }
 
 void BALProblem::Normalize(){
@@ -255,8 +255,8 @@ void BALProblem::Normalize(){
     double* camera = cameras + camera_block_size() * i;
     CameraToAngelAxisAndCenter(camera, angle_axis, center);
     // center = scale * (center - median)
-    VectorRef(center,3) = scale * (VectorRef(center,3)-median);
-    AngleAxisAndCenterToCamera(angle_axis, center,camera);
+    VectorRef(center, 3) = scale * (VectorRef(center, 3) - median);
+    AngleAxisAndCenterToCamera(angle_axis, center, camera);
   }
 }
 
@@ -285,7 +285,7 @@ void BALProblem::Perturb(const double rotation_sigma,
      if(rotation_sigma > 0.0){
        PerturbPoint3(rotation_sigma, angle_axis);
      }
-     AngleAxisAndCenterToCamera(angle_axis, center,camera);
+     AngleAxisAndCenterToCamera(angle_axis, center, camera);
 
      if(translation_sigma > 0.0)
         PerturbPoint3(translation_sigma, camera + camera_block_size() - 6);

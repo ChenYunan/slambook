@@ -110,7 +110,7 @@ void SolveProblem(const char* filename, const BundleParams& params)
     std::cout << "bal problem have " << bal_problem.num_cameras() << " cameras and "
               << bal_problem.num_points() << " points. " << std::endl;
     std::cout << "Forming " << bal_problem.num_observations() << " observatoins. " << std::endl;
-
+    
     // store the initial 3D cloud points and camera pose..
     if(!params.initial_ply.empty()){
         bal_problem.WriteToPLYFile(params.initial_ply);

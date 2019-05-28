@@ -27,7 +27,7 @@ int main( int argc, char** argv )
     vector<Mat> images; 
     for ( int i=0; i<10; i++ )
     {
-        string path = "./data/"+to_string(i+1)+".png";
+        string path = "../data/"+to_string(i+1)+".png";
         images.push_back( imread(path) );
     }
     
@@ -62,16 +62,16 @@ int main( int argc, char** argv )
     }
     
     // or with database 
-    cout<<"comparing images with database "<<endl;
-    DBoW3::Database db( vocab, false, 0);
-    for ( int i=0; i<descriptors.size(); i++ )
+    cout << "comparing images with database "<< endl;
+    DBoW3::Database db(vocab, false, 0);
+    for ( int i = 0; i < descriptors.size(); i++ )
         db.add(descriptors[i]);
-    cout<<"database info: "<<db<<endl;
-    for ( int i=0; i<descriptors.size(); i++ )
+    cout <<"database info: "<< db <<endl;
+    for ( int i = 0; i < descriptors.size(); i++ )
     {
         DBoW3::QueryResults ret;
         db.query( descriptors[i], ret, 4);      // max result=4
-        cout<<"searching for image "<<i<<" returns "<<ret<<endl<<endl;
+        cout << "searching for image "<< i <<" returns "<< ret << endl <<endl;
     }
-    cout<<"done."<<endl;
+    cout << "done." << endl;
 }

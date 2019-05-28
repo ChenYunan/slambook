@@ -76,14 +76,14 @@ public:
     }
 
     virtual void computeError() override   // The virtual function comes from the Edge base class. Must define if you use edge.
-    {
+    { 
         const VertexCameraBAL* cam = static_cast<const VertexCameraBAL*> ( vertex ( 0 ) );
         const VertexPointBAL* point = static_cast<const VertexPointBAL*> ( vertex ( 1 ) );
 
         ( *this ) ( cam->estimate().data(), point->estimate().data(), _error.data() );
 
     }
-
+    //重载括号操作符
     template<typename T>
     bool operator() ( const T* camera, const T* point, T* residuals ) const
     {
@@ -106,6 +106,8 @@ public:
 
         const VertexCameraBAL* cam = static_cast<const VertexCameraBAL*> ( vertex ( 0 ) );
         const VertexPointBAL* point = static_cast<const VertexPointBAL*> ( vertex ( 1 ) );
+
+        // VertexCameraBAL::Dimension和VertexPointBAL::Dimension是对应的N0和N1，误差函数参数的维度
         typedef ceres::internal::AutoDiff<EdgeObservationBAL, double, VertexCameraBAL::Dimension, VertexPointBAL::Dimension> BalAutoDiff;
 
         Eigen::Matrix<double, Dimension, VertexCameraBAL::Dimension, Eigen::RowMajor> dError_dCamera;
@@ -125,7 +127,7 @@ public:
         {
             assert ( 0 && "Error while differentiating" );
             _jacobianOplusXi.setZero();
-            _jacobianOplusXi.setZero();
+            _jacobianOplusXj.setZero();
         }
     }
 };

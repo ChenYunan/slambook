@@ -133,7 +133,7 @@ int main( int argc, char** argv )
 {
     if ( argc != 2 )
     {
-        cout<<"Usage: dense_mapping path_to_test_dataset"<<endl;
+        cout << "Usage: dense_mapping path_to_test_dataset" << endl;
         return -1;
     }
     
@@ -141,12 +141,12 @@ int main( int argc, char** argv )
     vector<string> color_image_files; 
     vector<SE3> poses_TWC;
     bool ret = readDatasetFiles( argv[1], color_image_files, poses_TWC );
-    if ( ret==false )
+    if ( ret == false )
     {
         cout<<"Reading image files failed!"<<endl;
         return -1; 
     }
-    cout<<"read total "<<color_image_files.size()<<" files."<<endl;
+    cout << "read total " << color_image_files.size() << " files." << endl;
     
     // 第一张图
     Mat ref = imread( color_image_files[0], 0 );                // gray-scale image 
@@ -156,13 +156,15 @@ int main( int argc, char** argv )
     Mat depth( height, width, CV_64F, init_depth );             // 深度图
     Mat depth_cov( height, width, CV_64F, init_cov2 );          // 深度图方差 
     
-    for ( int index=1; index<color_image_files.size(); index++ )
+    for ( int index = 1; index < color_image_files.size(); index++ )
     {
-        cout<<"*** loop "<<index<<" ***"<<endl;
+        cout << "*** loop " << index << " ***" << endl;
         Mat curr = imread( color_image_files[index], 0 );       
         if (curr.data == nullptr) continue;
         SE3 pose_curr_TWC = poses_TWC[index];
-        SE3 pose_T_C_R = pose_curr_TWC.inverse() * pose_ref_TWC; // 坐标转换关系： T_C_W * T_W_R = T_C_R 
+        // 坐标转换关系： T_C_W * T_W_R = T_C_R 
+        // R: reference, W: world, C: current
+        SE3 pose_T_C_R = pose_curr_TWC.inverse() * pose_ref_TWC; 
         update( ref, curr, pose_T_C_R, depth, depth_cov );
         plotDepth( depth );
         imshow("image", curr);
@@ -182,18 +184,18 @@ bool readDatasetFiles(
     std::vector<SE3>& poses
 )
 {
-    ifstream fin( path+"/first_200_frames_traj_over_table_input_sequence.txt");
+    ifstream fin( path + "/first_200_frames_traj_over_table_input_sequence.txt");
     if ( !fin ) return false;
     
     while ( !fin.eof() )
     {
 		// 数据格式：图像文件名 tx, ty, tz, qx, qy, qz, qw ，注意是 TWC 而非 TCW
         string image; 
-        fin>>image; 
+        fin >> image; 
         double data[7];
-        for ( double& d:data ) fin>>d;
+        for ( double& d:data ) fin >> d;
         
-        color_image_files.push_back( path+string("/images/")+image );
+        color_image_files.push_back( path + string("/images/") + image );
         poses.push_back(
             SE3( Quaterniond(data[6], data[3], data[4], data[5]), 
                  Vector3d(data[0], data[1], data[2]))
@@ -247,19 +249,19 @@ bool epipolarSearch(
 {
     Vector3d f_ref = px2cam( pt_ref );
     f_ref.normalize();
-    Vector3d P_ref = f_ref*depth_mu;	// 参考帧的 P 向量
+    Vector3d P_ref = f_ref * depth_mu;	// 参考帧的 P 向量
     
-    Vector2d px_mean_curr = cam2px( T_C_R*P_ref ); // 按深度均值投影的像素
-    double d_min = depth_mu-3*depth_cov, d_max = depth_mu+3*depth_cov;
-    if ( d_min<0.1 ) d_min = 0.1;
+    Vector2d px_mean_curr = cam2px( T_C_R * P_ref ); // 按深度均值投影的像素
+    double d_min = depth_mu - 3*depth_cov, d_max = depth_mu + 3*depth_cov;
+    if ( d_min < 0.1 ) d_min = 0.1;
     Vector2d px_min_curr = cam2px( T_C_R*(f_ref*d_min) );	// 按最小深度投影的像素
     Vector2d px_max_curr = cam2px( T_C_R*(f_ref*d_max) );	// 按最大深度投影的像素
     
     Vector2d epipolar_line = px_max_curr - px_min_curr;	// 极线（线段形式）
     Vector2d epipolar_direction = epipolar_line;		// 极线方向 
     epipolar_direction.normalize();
-    double half_length = 0.5*epipolar_line.norm();	// 极线线段的半长度
-    if ( half_length>100 ) half_length = 100;   // 我们不希望搜索太多东西 
+    double half_length = 0.5 * epipolar_line.norm();	// 极线线段的半长度
+    if ( half_length > 100 ) half_length = 100;   // 我们不希望搜索太多东西 
     
 	// 取消此句注释以显示极线（线段）
     // showEpipolarLine( ref, curr, pt_ref, px_min_curr, px_max_curr );
